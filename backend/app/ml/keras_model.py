@@ -10,15 +10,21 @@ from tensorflow.keras import layers
 class KerasModelManager:
     def __init__(self):
         self.model = None
-        self.model_path = os.path.join(os.path.dirname(__file__), "..", "..", "model", "mnist_model.keras")
-        self.load_model()
         self.config = ModelConfig()
+        self.weights_path = os.path.join(os.path.dirname(__file__), "..", "..", "model", "mnist.weights.h5")
+        self.load_model()
 
     def load_model(self):
         try:
-            if os.path.exists(self.model_path):
-                self.model = keras.models.load_model(self.model_path)
-                print(f"Model loaded from {self.model_path}")
+            if os.path.exists(self.weights_path):
+                self.model = keras.Sequential([
+                    keras.Input(shape=(28, 28)),
+                    layers.Flatten(),
+                    layers.Dense(self.config.hidden_units, activation=self.config.activation),
+                    layers.Dense(10, activation="softmax")
+                ])
+                self.model.load_weights(self.weights_path)
+                print(f"Model weights loaded from {self.weights_path}")
         except Exception as e:
             print(f"Failed to load model: {e}")
 
@@ -124,8 +130,8 @@ class KerasModelManager:
         
         test_loss, test_acc = model.evaluate(x_test, y_test)
         
-        os.makedirs(os.path.dirname(self.model_path), exist_ok=True)
-        model.save(self.model_path)
+        os.makedirs(os.path.dirname(self.weights_path), exist_ok=True)
+        model.save_weights(self.weights_path)
         
         self.model = model
         self.config = config

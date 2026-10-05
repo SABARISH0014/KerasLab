@@ -2,8 +2,9 @@ fastapi
 uvicorn
 pydantic
 numpy
-tensorflow
-keras
+tensorflow>=2.16.1
+keras>=3.0.0
 python-multipart
 Pillow
-gradio
+gradio==4.44.1
+huggingface-hub<0.26.0
