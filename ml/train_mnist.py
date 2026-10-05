@@ -42,11 +42,11 @@ def train_and_save_model():
     test_loss, test_acc = model.evaluate(x_test, y_test)
     print(f"Test accuracy: {test_acc:.4f}")
     
-    save_path = os.path.join(os.path.dirname(__file__), "..", "backend", "model", "mnist_model.keras")
+    save_path = os.path.join(os.path.dirname(__file__), "..", "backend", "model", "mnist.weights.h5")
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     
     print(f"Saving model to {save_path}...")
-    model.save(save_path)
+    model.save_weights(save_path)
     print("Model saved successfully!")
 
 if __name__ == "__main__":
