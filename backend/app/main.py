@@ -5,10 +5,17 @@ import os
 
 app = FastAPI(title="KerasLab Backend")
 
+frontend_url = os.environ.get("FRONTEND_URL", "http://localhost:3000")
+allow_origins = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    frontend_url
+]
+
 # Enable CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, restrict this
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

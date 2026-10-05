@@ -8,7 +8,10 @@ model_manager = KerasModelManager()
 
 @router.get("/health")
 async def health_check():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "model_loaded": model_manager.model is not None
+    }
 
 @router.get("/model/info")
 async def get_model_info():
