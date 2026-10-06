@@ -80,9 +80,9 @@ The backend includes a `Dockerfile` for containerization.
 - Run: `docker run -p 8000:8000 keraslab-backend`
 
 ## 11. Deployment
-- **Frontend:** Ready for Vercel
-- **Backend:** Ready for Google Cloud Run (via Docker image)
-
+- **Frontend:** Next.js / Vercel
+- **Backend:** FastAPI / AWS EC2 (Ubuntu + Nginx + systemd)
+- **ML:** TensorFlow / Keras (AWS-hosted Keras backend)
 ## 12. How the Prediction Works
 1. You draw a digit on the HTML5 canvas.
 2. The image is sent to FastAPI.

@@ -1,0 +1,15 @@
+[Unit]
+Description=Keras FastAPI Backend
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/opt/keras-backend
+Environment="PATH=/opt/keras-backend/venv/bin"
+EnvironmentFile=-/opt/keras-backend/.env
+ExecStart=/opt/keras-backend/venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 5000
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

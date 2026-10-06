@@ -20,5 +20,5 @@ RUN pip install --upgrade pip && \
 COPY app /app/app
 COPY model /app/model
 
-# Start FastAPI application using the dynamic PORT provided by Render
-CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Start FastAPI application
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
