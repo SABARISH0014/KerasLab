@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Info, Layers } from "lucide-react";
+import { Info, Layers, GraduationCap } from "lucide-react";
 
 export default function ExplorePage() {
   const [activeNode, setActiveNode] = useState<string | null>(null);
@@ -43,8 +43,8 @@ export default function ExplorePage() {
 
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Interactive Architecture Visualization */}
-        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-8 overflow-x-auto">
-          <div className="min-w-[600px] flex justify-between items-center h-96 relative px-8">
+        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-8">
+          <div className="w-full flex justify-between items-center h-96 relative px-4 lg:px-8">
             {/* Connection Lines (simplified via CSS) */}
             <div className="absolute top-1/2 left-[15%] right-[15%] h-0.5 bg-slate-800 -z-10 -translate-y-1/2" />
             
@@ -131,11 +131,11 @@ export default function ExplorePage() {
           
           {activeNode ? (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-              <h2 className="text-2xl font-bold text-blue-400">{explanations[activeNode].title}</h2>
+              <h2 className="text-2xl font-bold text-blue-400 pr-16">{explanations[activeNode].title}</h2>
               
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm font-semibold text-slate-400 uppercase tracking-wider">
-                  <Info className="w-4 h-4" /> Simple Explanation
+                  <GraduationCap className="w-4 h-4" /> Simple Explanation
                 </div>
                 <p className="text-lg text-slate-200 leading-relaxed bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
                   {explanations[activeNode].simple}
@@ -153,7 +153,7 @@ export default function ExplorePage() {
             </div>
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-50">
-              <Info className="w-16 h-16 text-slate-600" />
+              <GraduationCap className="w-16 h-16 text-slate-600" />
               <p className="text-lg">Click any part of the network on the left to learn what it does.</p>
             </div>
           )}
