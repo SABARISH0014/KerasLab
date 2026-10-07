@@ -44,7 +44,7 @@ export default function Home() {
           <Database className="w-12 h-12 text-purple-400 mb-6" />
           <h2 className="text-xl font-bold mb-4">What is a Neural Network?</h2>
           <p className="text-slate-400 leading-relaxed">
-            A network of interconnected "neurons" arranged in layers. Data flows from the <strong>Input Layer</strong>, through one or more <strong>Hidden Layers</strong> where learning happens, to the <strong>Output Layer</strong>.
+            A network of interconnected &quot;neurons&quot; arranged in layers. Data flows from the <strong>Input Layer</strong>, through one or more <strong>Hidden Layers</strong> where learning happens, to the <strong>Output Layer</strong>.
           </p>
         </div>
       </section>
@@ -67,9 +67,9 @@ export default function Home() {
           
           <div className="flex-1">
             <div className="flex justify-center gap-1 mb-4">
-              {[...Array(5)].map((_, i) => (
+              {[40, 75, 55, 90, 30].map((h, i) => (
                 <div key={i} className="w-3 h-20 bg-blue-500/20 rounded-full flex flex-col justify-between overflow-hidden">
-                  <div className={`w-full bg-blue-400 rounded-full`} style={{ height: `${Math.random() * 100}%` }}></div>
+                  <div className={`w-full bg-blue-400 rounded-full`} style={{ height: `${h}%` }}></div>
                 </div>
               ))}
             </div>
@@ -87,7 +87,7 @@ export default function Home() {
               </div>
             </div>
             <h3 className="font-semibold text-purple-300">Prediction</h3>
-            <p className="text-sm text-slate-500 mt-2">"It's a seven"</p>
+            <p className="text-sm text-slate-500 mt-2">&quot;It&apos;s a seven&quot;</p>
           </div>
         </div>
       </section>

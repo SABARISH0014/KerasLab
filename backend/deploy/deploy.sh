@@ -2,15 +2,16 @@
 set -e
 
 # Configuration variables
-EC2_HOST="43.204.149.247"
+EC2_HOST="15.252.212.46"
 EC2_USER="ubuntu"
 APP_DIR="/opt/keras-backend"
-SSH_KEY="C:\Users\sabar\Downloads\keras-backend-key.pem"
+SSH_KEY="C:/Users/sabar/Downloads/keras-backend-key.pem"
 
 echo "Deploying to ${EC2_USER}@${EC2_HOST}..."
 
 # Sync files (excluding unnecessary ones like venv or local caches)
 rsync -avz --exclude 'venv' \
+           --exclude '.venv' \
            --exclude '__pycache__' \
            --exclude '*.pyc' \
            --exclude '.git' \
@@ -23,7 +24,7 @@ ssh -i ${SSH_KEY} ${EC2_USER}@${EC2_HOST} << 'EOF'
     cd /opt/keras-backend
     
     # Update dependencies in case requirements.txt changed
-    ./venv/bin/pip install -r requirements.txt
+    ./.venv/bin/pip install -r requirements.txt
     
     # Restart services
     sudo systemctl daemon-reload

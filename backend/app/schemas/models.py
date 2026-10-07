@@ -20,6 +20,13 @@ class PredictResponse(BaseModel):
     confidence: float
     probabilities: List[float]
 
+class BatchPredictResponse(BaseModel):
+    prediction: str
+    digits: List[int]
+    confidences: List[float]
+    probabilities: List[List[float]]
+    digit_count: int
+
 class EvaluateResponse(BaseModel):
     test_accuracy: float
     test_loss: float

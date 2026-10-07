@@ -4,13 +4,26 @@ import { useState } from "react";
 import { Settings, Code, Play, CheckCircle, AlertCircle } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
+interface TrainResult {
+  test_accuracy: number;
+  test_loss: number;
+  chartData: Array<{
+    epoch: number;
+    accuracy: number;
+    loss: number;
+    val_accuracy?: number;
+    val_loss?: number;
+  }>;
+}
+
 export default function BuildPage() {
   const [neurons, setNeurons] = useState(128);
   const [activation, setActivation] = useState("relu");
   const [epochs, setEpochs] = useState(5);
   
   const [isTraining, setIsTraining] = useState(false);
-  const [trainResult, setTrainResult] = useState<any>(null);
+  const [trainStatus, setTrainStatus] = useState<{epoch: number, logs: Record<string, number>} | null>(null);
+  const [trainResult, setTrainResult] = useState<TrainResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const kerasCode = `model = keras.Sequential([
@@ -31,9 +44,26 @@ model.fit(x_train, y_train, epochs=${epochs})`;
     setIsTraining(true);
     setError(null);
     setTrainResult(null);
+    setTrainStatus(null);
     
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    
+    // Start polling status
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`${apiUrl}/train/status`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === "training") {
+            setTrainStatus({ epoch: data.epoch, logs: data.logs });
+          }
+        }
+      } catch {
+        // Ignore polling errors
+      }
+    }, 1000);
+
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       const response = await fetch(`${apiUrl}/train`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,9 +89,11 @@ model.fit(x_train, y_train, epochs=${epochs})`;
       }));
       
       setTrainResult({ ...data, chartData });
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
+      clearInterval(interval);
+      setTrainStatus(null);
       setIsTraining(false);
     }
   };
@@ -173,6 +205,27 @@ model.fit(x_train, y_train, epochs=${epochs})`;
               <code>{kerasCode}</code>
             </pre>
           </div>
+
+          {isTraining && trainStatus && (
+            <div className="bg-slate-900 border border-blue-500/50 rounded-3xl p-6 animate-in fade-in space-y-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-semibold text-blue-400 flex items-center gap-2">
+                  <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-400"></span>
+                  Training in Progress (Epoch {trainStatus.epoch}/{epochs})
+                </span>
+              </div>
+              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-blue-500 transition-all duration-500 ease-out"
+                  style={{ width: `${(trainStatus.epoch / epochs) * 100}%` }}
+                ></div>
+              </div>
+              <div className="flex gap-6 text-sm text-slate-400">
+                {trainStatus.logs?.loss && <span>Loss: {trainStatus.logs.loss.toFixed(4)}</span>}
+                {trainStatus.logs?.accuracy && <span>Accuracy: {(trainStatus.logs.accuracy * 100).toFixed(2)}%</span>}
+              </div>
+            </div>
+          )}
 
           {trainResult && (
             <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-6 animate-in fade-in slide-in-from-bottom-4">

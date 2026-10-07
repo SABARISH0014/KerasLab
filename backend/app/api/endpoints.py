@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from app.schemas.models import ModelConfig, PredictResponse, TrainRequest, TrainResponse, EvaluateResponse
+from app.schemas.models import ModelConfig, PredictResponse, BatchPredictResponse, TrainRequest, TrainResponse, EvaluateResponse
 from app.ml.keras_model import KerasModelManager
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 router = APIRouter()
 model_manager = KerasModelManager()
@@ -32,13 +32,36 @@ async def predict(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
 
+@router.post("/predict/batch", response_model=BatchPredictResponse)
+async def predict_batch(files: List[UploadFile] = File(...)):
+    if len(files) != 10:
+        raise HTTPException(status_code=400, detail="Expected exactly 10 digit images")
+    
+    contents_list = []
+    for f in files:
+        if not f.content_type.startswith("image/"):
+            raise HTTPException(status_code=400, detail="All files must be images")
+        contents_list.append(await f.read())
+        
+    try:
+        result = model_manager.predict_batch(contents_list)
+        return result
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Batch prediction failed: {str(e)}")
+
 @router.post("/train", response_model=TrainResponse)
-async def train(request: TrainRequest):
+def train(request: TrainRequest):
     try:
         result = model_manager.train(request.config)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Training failed: {str(e)}")
+
+@router.get("/train/status")
+def train_status():
+    return model_manager.training_status
 
 @router.post("/evaluate", response_model=EvaluateResponse)
 async def evaluate():

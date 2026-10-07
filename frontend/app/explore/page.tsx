@@ -166,7 +166,7 @@ export default function ExplorePage() {
           <div className="flex-1 space-y-4">
             <h2 className="text-3xl font-bold">The MNIST Dataset</h2>
             <p className="text-slate-400 text-lg">
-              To train our network, we need examples. The <strong>MNIST</strong> dataset is like the "Hello World" of deep learning. It contains 70,000 images of handwritten digits (0-9).
+              To train our network, we need examples. The <strong>MNIST</strong> dataset is like the &quot;Hello World&quot; of deep learning. It contains 70,000 images of handwritten digits (0-9).
             </p>
             <ul className="space-y-2 text-slate-300">
               <li className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-blue-500" /> Image Size: 28 × 28 pixels</li>
